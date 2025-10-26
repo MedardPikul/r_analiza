@@ -1,7 +1,13 @@
 # History files
 .Rhistory
 .Rapp.history
+<<<<<<< HEAD
 projekt.Rproj
+=======
+
+r_analiza.Rproj
+
+>>>>>>> 40e7ae54346443cf27ecf5edfac7617608a2adfd
 # Session Data files
 .RData
 .RDataTmp
