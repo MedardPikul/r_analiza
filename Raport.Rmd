@@ -22,7 +22,7 @@ library(tidyverse)
 
 # Wprowadzenie
 
- Celem niniejszego raportu jest analiza wpływu social mediów na życie studentów. Raport zawiera przegląd kluczowych danych, ich wizualizacje oraz obszerne wnioski. Zbiór danych zawiera `r nrow(dane)` wierszy oraz `r ncol(dane)`.
+Celem niniejszego raportu jest analiza wpływu social media na życia studentów. Raport zawiera przegląd kluczowych danych, ich wizualizacje oraz obszerne wnioski. Zbiór danych zawiera `r nrow(dane)` wierszy oraz `r ncol(dane)`kolumn.
 
 ## Opis danych
 
