@@ -5,9 +5,6 @@ date: "`r Sys.Date()`"
 output:
   rmdformats::readthedown:
     highlight: kate
-    toc: true
-    toc_depth: 3
-    theme: "pink"
     self_contained: true
     number_sections: true
     code_folding: show
@@ -19,10 +16,13 @@ output:
 ```{r setup, include=FALSE}
 ## Global options
 knitr::opts_chunk$set(cache = TRUE)
-dane <- read.csv("C:/Users/pikul/Documents/analiza_r_25_26/r_analiza/Students Social Media Addiction.csv")
+dane <- read.csv("Students Social Media Addiction.csv")
 ```
+
 # Wprowadzenie
- Celem niniejszego raportu jest analiza wpływu social mediów na życie studentów. Raport zawiera przegląd kluczowych danych, ich wizualizacje oraz obszerne wnioski. Zbiór danych zawiera `r nrows(dane)` wierszy oraz `r ncols(dane)`.
+
+ Celem niniejszego raportu jest analiza wpływu social mediów na życie studentów. Raport zawiera przegląd kluczowych danych, ich wizualizacje oraz obszerne wnioski. Zbiór danych zawiera `r nrow(dane)` wierszy oraz `r ncol(dane)`.
 
 ## Opis danych
+
 Dane zawierają następujące kolumny:
