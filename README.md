@@ -4,3 +4,4 @@ kiedyś byłem nikim w dziurawych butach
 na nadgarstku mam korone to jest rolex
 hello :)
 hejka
+hej
