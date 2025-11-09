@@ -22,5 +22,7 @@ knitr::opts_chunk$set(cache = TRUE)
 dane <- read.csv("C:/Users/pikul/Documents/analiza_r_25_26/r_analiza/Students Social Media Addiction.csv")
 ```
 # Wprowadzenie
- Celem niniejszego raportu jest analiza wpływu social mediów na życie studentów. Raport zawiera przegląd kluczowych danych, ich wizualizacje oraz obszerne wnioski. 
+ Celem niniejszego raportu jest analiza wpływu social mediów na życie studentów. Raport zawiera przegląd kluczowych danych, ich wizualizacje oraz obszerne wnioski. Zbiór danych zawiera `r nrows(dane)` wierszy oraz `r ncols(dane)`.
 
+## Opis danych
+Dane zawierają następujące kolumny:
