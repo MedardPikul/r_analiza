@@ -18,7 +18,11 @@ output:
 knitr::opts_chunk$set(cache = TRUE)
 dane <- read.csv("Students Social Media Addiction.csv")
 library(tidyverse)
- library(naniar)
+library(naniar)
+library(validate)
+library(validatetools)
+library(dcmodify)
+library(errorlocate)
 ```
 
 # Wprowadzenie
@@ -42,3 +46,38 @@ W danych znajduje się `r procent` % kompletnych wartości.
 ```{r include=FALSE}
 naniar::vis_miss(dane)
 ```
+
+## Walidacja danych
+
+- czy wiek przyjmuje wartości od 16 - 25?
+- czy godziny przyjmują wartości 0 - 24?
+- czy wszystkie wartości liczbowe są większe od 0? 
+- czy mental health score i addicted score  przyjmują wartości 1 - 10? 
+- płeć - kobieta lub mężczyzna?
+- academic level - high school, undergraduate, graduate? 
+- relationship status - single, in relationship, complicated?
+- affects academic performance - yes/no?
+
+
+```{r}
+reguly <- validator(
+Age >= 16 & Age <= 25,
+Gender %in% c("Female", "Male"),
+Academic_Level  %in% c("High School", "Undergraduate", "Graduate"),
+Avg_Daily_Usage_Hours > 0 & Avg_Daily_Usage_Hours < 24,
+Affects_Academic_Performance %in% c("Yes", "No"),
+Sleep_Hours_Per_Night >= 0 & Sleep_Hours_Per_Night <= 24,
+Mental_Health_Score >= 1 & Mental_Health_Score<=10,
+Relationship_Status %in% c("In Relationship", "Single", "Complicated"),
+Addicted_Score >= 1 & Addicted_Score <= 10
+)
+```
+
+```{r}
+cf <- confront(dane, reguly, key="Student_ID")
+
+barplot(cf)
+
+```
+
+
