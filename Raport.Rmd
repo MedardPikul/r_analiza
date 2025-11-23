@@ -18,6 +18,7 @@ output:
 knitr::opts_chunk$set(cache = TRUE)
 dane <- read.csv("Students Social Media Addiction.csv")
 library(tidyverse)
+ library(naniar)
 ```
 
 # Wprowadzenie
@@ -29,8 +30,6 @@ Celem niniejszego raportu jest analiza wpływu social media na życia studentów
 Dane zawierają następujące kolumny:
 
 # Porządkowanie danych
-
-install.packages("naniar") library(naniar)
 
 ## 2.1 Braki danych
 
