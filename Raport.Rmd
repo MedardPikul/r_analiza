@@ -27,3 +27,5 @@ Celem niniejszego raportu jest analiza wpływu social media na życia studentów
 ## Opis danych
 
 Dane zawierają następujące kolumny:
+
+# Porządkowanie danych
