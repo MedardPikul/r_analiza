@@ -39,6 +39,6 @@ procent <- prop_complete_var(dane)*100
 
 W danych znajduje się `r procent` % kompletnych wartości.
 
-```{r}
+```{r include=FALSE}
 naniar::vis_miss(dane)
 ```
