@@ -29,3 +29,13 @@ Celem niniejszego raportu jest analiza wpływu social media na życia studentów
 Dane zawierają następujące kolumny:
 
 # Porządkowanie danych
+
+install.packages("naniar") library(naniar)
+
+## 2.1 Braki danych
+
+```{r}
+procent <- prop_complete_var(dane)*100
+```
+
+W danych znajduje się `r procent` % kompletnych wartości.
