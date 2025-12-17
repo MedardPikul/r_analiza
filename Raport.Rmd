@@ -89,7 +89,7 @@ barplot(cf)
 
 ```{r}
 dane$Academic_Level <- factor(dane$Academic_Level, 
-                            levels = c("High school", "Undergraduate", "Graduate"))
+                            levels = c("High School", "Undergraduate", "Graduate"))
 dane$Gender <- factor(dane$Gender,
                   levels = c("Male", "Female")
 )
