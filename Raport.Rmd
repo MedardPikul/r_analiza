@@ -88,15 +88,51 @@ barplot(cf)
 
 ```{r}
 dane$Academic_Level <- factor(dane$Academic_Level, 
-                            levels = c("High school", "Undergraduate", "Graduate"))
+                            levels = c("High School", "Undergraduate", "Graduate"))
 dane$Gender <- factor(dane$Gender,
                   levels = c("Male", "Female")
 )
 
 ggplot(dane, aes(x = Academic_Level, fill=Gender)) +
   geom_bar(position = "dodge") +
-  labs(title = "Rozkład Płci i Poziomu Akademickiego",
-       x = "Poziom Akademicki",
-       y = "Liczba Studentów") +
+  labs(title = "Rozkład płci i poziomu akademickiego",
+       x = "Poziom akademicki",
+       y = "Liczba studentów") +
   theme_minimal()
 ```
+
+### Wiek badanych
+```{r}
+ggplot(dane, aes(x = Age)) +
+  geom_histogram(binwidth = 0.5, fill = "skyblue", color = "black") +
+  labs(title = "Wiek badanych studentów",
+       x = "Wiek",
+       y = "Liczba studentów") +
+  theme_minimal()
+```
+## Intensywność Używania Social Mediów 
+
+### Średni czas użycia
+
+```{r}
+ggplot(dane, aes(x = Avg_Daily_Usage_Hours)) +
+  geom_histogram(binwidth = 1, fill = "#9f2042", color = "#6c0d27") +
+  labs(title = "Średni czas użycia social mediów dziennie",
+       x = "Średni czas użycia (h)",
+       y = "Liczba studentów") +
+  theme_minimal()
+``` 
+### Najczęściej używane platformy 
+
+```{r}
+dane %>%
+mutate(top_5 = fct_lump_n(Most_Used_Platform, n = 4, other_level = "Inne")) %>%
+  ggplot(aes(x = top_5)) +
+  geom_bar(fill = "#6c0d27") +
+  labs(title = "Najczęściej używane platformy social media",
+       x = "Platforma",
+       y = "Liczba studentów") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
