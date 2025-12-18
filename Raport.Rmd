@@ -24,6 +24,7 @@ library(validatetools)
 library(dcmodify)
 library(errorlocate)
 library(ggplot2)
+library(plotly)
 ```
 
 # Wprowadzenie
@@ -102,6 +103,7 @@ ggplot(dane, aes(x = Academic_Level, fill=Gender)) +
 ```
 
 ### Wiek badanych
+
 ```{r}
 ggplot(dane, aes(x = Age)) +
   geom_histogram(binwidth = 0.5, fill = "skyblue", color = "black") +
@@ -110,7 +112,8 @@ ggplot(dane, aes(x = Age)) +
        y = "Liczba studentów") +
   theme_minimal()
 ```
-## Intensywność Używania Social Mediów 
+
+## Intensywność Używania Social Mediów
 
 ### Średni czas użycia
 
@@ -121,8 +124,9 @@ ggplot(dane, aes(x = Avg_Daily_Usage_Hours)) +
        x = "Średni czas użycia (h)",
        y = "Liczba studentów") +
   theme_minimal()
-``` 
-### Najczęściej używane platformy 
+```
+
+### Najczęściej używane platformy
 
 ```{r}
 dane %>%
@@ -136,3 +140,64 @@ mutate(top_5 = fct_lump_n(Most_Used_Platform, n = 4, other_level = "Inne")) %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+## Wpływ Social Mediów na Wyniki Akademickie
+
+```{r}
+
+wykres <- dane %>%
+  count(Addicted_Score) %>%
+  ggplot(aes( x = Addicted_Score, y=n)) +
+  geom_point(color= "blue")+
+  geom_line(color= "blue")+
+  labs(title = "Poziom uzależnienia uczniów",
+       x = "Poziom uzależnienia",
+       y = "Liczba uczniów") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+plotly:: ggplotly(wykres)
+```
+
+
+Największa liczba badanych koncentruje się na umiarkowanych i wyższych poziomach uzależnienia, co wskazuje na powszechność intensywnego korzystania z mediów społecznościowych w badanej grupie.
+
+
+```{r}
+ggplot(dane, aes(x = Affects_Academic_Performance)) +
+  geom_bar(fill = "#6c0d27", width= 0.5)+
+  scale_x_discrete(
+    labels = c(
+      "Yes" = "Tak",
+      "No"  = "Nie"
+    )
+  ) +
+  labs(title = "Wpływ social mediów na wyniki akademickie",
+       x = "Czy social media wpływają na wyniki akademickie?", 
+       y = "Liczba studentów")+
+         theme_minimal()+
+   theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+```
+ Zdecydowana większość badanych zadeklarowała, że korzystanie z social mediów wpływa na ich osiągnięcia akademickie, podczas gdy mniejsza część respondentów nie dostrzega takiego wpływu. Uzyskane wyniki sugerują, że studenci w dużym stopniu są świadomi oddziaływania mediów społecznościowych na wyniki w nauce.
+
+## Social Media a Zdrowie Psychiczne
+
+```{r}
+ggplot(dane, aes(x= Avg_Daily_Usage_Hours, y = Mental_Health_Score))+
+geom_smooth(method = "lm", se = F) +
+ labs(
+    title = "Zależność między uzależnieniem od social mediów a zdrowiem psychicznym",
+    x = "Poziom uzależnienia",
+    y = "Poziom zdrowia psychicznego"
+  ) +
+  theme_minimal()+
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+```
+
+
+Wykres przedstawia linię regresji liniowej obrazującą zależność pomiędzy poziomem uzależnienia od social mediów a zdrowiem psychicznym studentów. Wraz ze wzrostem poziomu uzależnienia obserwuje się spadek wyników zdrowia psychicznego.
