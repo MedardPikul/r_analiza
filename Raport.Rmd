@@ -50,15 +50,14 @@ naniar::vis_miss(dane)
 
 ## Walidacja danych
 
-- czy wiek przyjmuje wartości od 16 - 25?
-- czy godziny przyjmują wartości 0 - 24?
-- czy wszystkie wartości liczbowe są większe od 0? 
-- czy mental health score i addicted score  przyjmują wartości 1 - 10? 
-- płeć - kobieta lub mężczyzna?
-- academic level - high school, undergraduate, graduate? 
-- relationship status - single, in relationship, complicated?
-- affects academic performance - yes/no?
-
+-   czy wiek przyjmuje wartości od 16 - 25?
+-   czy godziny przyjmują wartości 0 - 24?
+-   czy wszystkie wartości liczbowe są większe od 0?
+-   czy mental health score i addicted score przyjmują wartości 1 - 10?
+-   płeć - kobieta lub mężczyzna?
+-   academic level - high school, undergraduate, graduate?
+-   relationship status - single, in relationship, complicated?
+-   affects academic performance - yes/no?
 
 ```{r}
 reguly <- validator(
@@ -83,7 +82,7 @@ barplot(cf)
 
 # Wizualizacja danych
 
-## Charakterystyka demograficzna badanej grupy studenckiej 
+## Charakterystyka demograficzna badanej grupy studenckiej
 
 ### Rozkład Płci i Poziomu Akademickiego
 
@@ -101,4 +100,3 @@ ggplot(dane, aes(x = Academic_Level, fill=Gender)) +
        y = "Liczba Studentów") +
   theme_minimal()
 ```
-
