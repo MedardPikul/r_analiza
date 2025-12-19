@@ -30,6 +30,7 @@ r_analiza.Rproj
 
 # RStudio files
 .Rproj.user/
+
 # produced vignettes
 
 vignettes/*.html
