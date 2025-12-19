@@ -23,6 +23,7 @@ library(validate)
 library(validatetools)
 library(dcmodify)
 library(errorlocate)
+library(ggplot2)
 ```
 
 # Wprowadzenie
@@ -78,3 +79,28 @@ cf <- confront(dane, reguly, key="Student_ID")
 barplot(cf)
 
 ```
+<<<<<<< HEAD
+=======
+
+# Wizualizacja danych
+
+## Charakterystyka demograficzna badanej grupy studenckiej 
+
+### Rozkład Płci i Poziomu Akademickiego
+
+```{r}
+dane$Academic_Level <- factor(dane$Academic_Level, 
+                            levels = c("High school", "Undergraduate", "Graduate"))
+dane$Gender <- factor(dane$Gender,
+                  levels = c("Male", "Female")
+)
+
+ggplot(dane, aes(x = Academic_Level, fill=Gender)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Rozkład Płci i Poziomu Akademickiego",
+       x = "Poziom Akademicki",
+       y = "Liczba Studentów") +
+  theme_minimal()
+```
+
+>>>>>>> 6c7eb21fbb29ba00e250b6dbf93efe8fdebcf5b1
