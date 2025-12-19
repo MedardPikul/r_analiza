@@ -139,7 +139,7 @@ mutate(top_5 = fct_lump_n(Most_Used_Platform, n = 4, other_level = "Inne")) %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-## Wpływ Social Mediów na Wyniki Akademickie
+## Wpływ social mediów na wyniki akademickie
 
 ```{r}
 
@@ -182,7 +182,7 @@ ggplot(dane, aes(x = Affects_Academic_Performance)) +
 ```
  Zdecydowana większość badanych zadeklarowała, że korzystanie z social mediów wpływa na ich osiągnięcia akademickie, podczas gdy mniejsza część respondentów nie dostrzega takiego wpływu. Uzyskane wyniki sugerują, że studenci w dużym stopniu są świadomi oddziaływania mediów społecznościowych na wyniki w nauce.
 
-## Social Media a Zdrowie Psychiczne
+## Social media a zdrowie psychiczne
 
 ```{r}
 ggplot(dane, aes(x= Avg_Daily_Usage_Hours, y = Mental_Health_Score))+
@@ -200,3 +200,15 @@ geom_smooth(method = "lm", se = F) +
 
 
 Wykres przedstawia linię regresji liniowej obrazującą zależność pomiędzy poziomem uzależnienia od social mediów a zdrowiem psychicznym studentów. Wraz ze wzrostem poziomu uzależnienia obserwuje się spadek wyników zdrowia psychicznego.
+
+## Wpływ social mediów na relacje interpersonalne 
+
+```{r}
+ggplot(dane, aes(x = Avg_Daily_Usage_Hours, y = Conflicts_Over_Social_Media)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", col = "blue") +
+  labs(title = "Korelacja czasu używania social mediów z liczbą konfliktów") +
+  theme_light()
+```
+
+Wykres przedstawia zależność pomiędzy przeciętną liczbą godzin używania social mediów a liczbą konfliktów spowodanych social mediami wraz z przeiwdywaną linią trendu. Przy wzroście średniego dziennego użytkowania social mediów zauważa się również wzrost liczby konfliktów w tym temacie.
