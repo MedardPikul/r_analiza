@@ -270,5 +270,5 @@ kable(tabela_gender,
       caption = "Tabela 4.2. Statystyki opisowe Addicted_Score w podziale na płeć") %>%
   kable_paper("striped", full_width = FALSE)
 ```
-
+library(ggstatsplot)
 
