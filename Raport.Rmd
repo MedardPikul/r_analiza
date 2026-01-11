@@ -30,6 +30,8 @@ library(summarytools)
 library(knitr)
 library(kableExtra)
 library(psych)
+library(broom)
+library(ggstatsplot)
 ```
 
 # Wprowadzenie
@@ -270,5 +272,30 @@ kable(tabela_gender,
       caption = "Tabela 4.2. Statystyki opisowe Addicted_Score w podziale na płeć") %>%
   kable_paper("striped", full_width = FALSE)
 ```
+
 library(ggstatsplot)
 
+# Wnioskowanie statystyczne
+
+```{r}
+ggbetweenstats(dane, Gender, Addicted_Score)
+```
+
+```{r}
+ggbetweenstats(dane, Academic_Level , Addicted_Score)
+
+```
+
+anova <- aov(Mental_Health_Score ~ Most_Used_Platform, data=dane)
+
+dane |>
+aov(Mental_Health_Score ~ Most_Used_Platform, data=_) |>
+tidy() |>
+kbl() |>
+kable_classic(full_width = FALSE, html_font="Cambria")
+
+## Czy istnieje zależność między poziomem edukacji a najczęściej używaną aplikacją?
+
+```{r}
+ggbarstats(dane, Academic_Level, Most_Used_Platform, bf.message = FALSE)
+```
