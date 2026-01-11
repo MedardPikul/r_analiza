@@ -32,6 +32,7 @@ r_analiza.Rproj
 .Rproj.user/
 
 # produced vignettes
+
 vignettes/*.html
 vignettes/*.pdf
 
@@ -57,3 +58,4 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+Raport.Rmd

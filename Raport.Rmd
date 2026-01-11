@@ -25,6 +25,11 @@ library(dcmodify)
 library(errorlocate)
 library(ggplot2)
 library(plotly)
+library(gtsummary)
+library(summarytools)
+library(knitr)
+library(kableExtra)
+library(psych)
 ```
 
 # Wprowadzenie
@@ -140,7 +145,7 @@ mutate(top_5 = fct_lump_n(Most_Used_Platform, n = 4, other_level = "Inne")) %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-## Wpływ Social Mediów na Wyniki Akademickie
+## Wpływ social mediów na wyniki akademickie
 
 ```{r}
 
@@ -159,9 +164,7 @@ wykres <- dane %>%
 plotly:: ggplotly(wykres)
 ```
 
-
 Największa liczba badanych koncentruje się na umiarkowanych i wyższych poziomach uzależnienia, co wskazuje na powszechność intensywnego korzystania z mediów społecznościowych w badanej grupie.
-
 
 ```{r}
 ggplot(dane, aes(x = Affects_Academic_Performance)) +
@@ -181,9 +184,10 @@ ggplot(dane, aes(x = Affects_Academic_Performance)) +
   )
 
 ```
- Zdecydowana większość badanych zadeklarowała, że korzystanie z social mediów wpływa na ich osiągnięcia akademickie, podczas gdy mniejsza część respondentów nie dostrzega takiego wpływu. Uzyskane wyniki sugerują, że studenci w dużym stopniu są świadomi oddziaływania mediów społecznościowych na wyniki w nauce.
 
-## Social Media a Zdrowie Psychiczne
+Zdecydowana większość badanych zadeklarowała, że korzystanie z social mediów wpływa na ich osiągnięcia akademickie, podczas gdy mniejsza część respondentów nie dostrzega takiego wpływu. Uzyskane wyniki sugerują, że studenci w dużym stopniu są świadomi oddziaływania mediów społecznościowych na wyniki w nauce.
+
+## Social media a zdrowie psychiczne
 
 ```{r}
 ggplot(dane, aes(x= Avg_Daily_Usage_Hours, y = Mental_Health_Score))+
@@ -199,5 +203,72 @@ geom_smooth(method = "lm", se = F) +
   )
 ```
 
-
 Wykres przedstawia linię regresji liniowej obrazującą zależność pomiędzy poziomem uzależnienia od social mediów a zdrowiem psychicznym studentów. Wraz ze wzrostem poziomu uzależnienia obserwuje się spadek wyników zdrowia psychicznego.
+
+## Wpływ social mediów na relacje interpersonalne
+
+```{r}
+ggplot(dane, aes(x = Avg_Daily_Usage_Hours, y = Conflicts_Over_Social_Media)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", col = "blue") +
+  labs(title = "Korelacja czasu używania social mediów z liczbą konfliktów") +
+  theme_light()
+```
+
+Wykres przedstawia zależność pomiędzy przeciętną liczbą godzin używania social mediów a liczbą konfliktów spowodanych social mediami wraz z przeiwdywaną linią trendu. Przy wzroście średniego dziennego użytkowania social mediów zauważa się również wzrost liczby konfliktów w tym temacie.
+
+# Statystyki opisowe
+
+## Tendencja centralna dla zmiennej Addicted Score
+
+```{r kable_report, echo=FALSE}
+mostusedplatform_addictedscore <- split(dane$Addicted_Score, dane$Most_Used_Platform)
+
+inline_plot <- data.frame( 
+  platform = names(mostusedplatform_addictedscore),
+  boxplot = "",
+  histogram = "",
+  points1 = ""
+)
+
+inline_plot %>%
+  kbl(booktabs = TRUE) %>%
+  kable_paper(full_width = FALSE) %>%
+  column_spec(2, image = spec_boxplot(mostusedplatform_addictedscore)) %>%
+  column_spec(3, image = spec_hist(mostusedplatform_addictedscore)) %>%
+  column_spec(4, image = spec_plot(mostusedplatform_addictedscore, type = "p"))
+```
+
+```{r}
+raport <- list("Addicted Score" = 
+                 list("Min"= ~ min(Addicted_Score), 
+                      "Max"= ~ max(Addicted_Score), 
+                      "Q1"= ~ quantile(Addicted_Score,0.25), 
+                      "Mediana"= ~ round(median(Addicted_Score),2), 
+                      "Q3"= ~ quantile(Addicted_Score,0.75), 
+                      "Średnia"= ~ round(mean(Addicted_Score),2), 
+                      "Odch. std."= ~ round(sd(Addicted_Score),2), 
+                      "IQR"= ~ round(IQR(Addicted_Score),2), 
+                      "Odch. ćwiartkowe"=~round(IQR(Addicted_Score)/2,2), 
+                      "Odch. std. w %"=~round((sd(Addicted_Score)/mean(Addicted_Score)),2), "Odch. ćwiartkowe w %"=~round((IQR(Addicted_Score)/median(Addicted_Score)),2), "Skośność"=~round(skew(Addicted_Score),2), "Kurtoza"=~round(kurtosi(Addicted_Score),2) ))
+tabela_gender <- dane %>%
+  group_by(Gender) %>%
+  summarise(
+    Min = min(Addicted_Score),
+    Q1 = quantile(Addicted_Score, 0.25),
+    Mediana = median(Addicted_Score),
+    Q3 = quantile(Addicted_Score, 0.75),
+    Max = max(Addicted_Score),
+    Średnia = mean(Addicted_Score),
+    SD = sd(Addicted_Score),
+    Skośność = psych::skew(Addicted_Score),
+    Kurtoza = psych::kurtosi(Addicted_Score)
+  )
+
+kable(tabela_gender,
+      digits = 2,
+      caption = "Tabela 4.2. Statystyki opisowe Addicted_Score w podziale na płeć") %>%
+  kable_paper("striped", full_width = FALSE)
+```
+
+
