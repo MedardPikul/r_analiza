@@ -32,6 +32,7 @@ library(kableExtra)
 library(psych)
 library(broom)
 library(ggstatsplot)
+library(corrplot)
 ```
 
 # Wprowadzenie
@@ -40,20 +41,19 @@ W dobie powszechnej cyfryzacji media społecznościowe stały się nieodłączny
 
 Raport zawiera przegląd kluczowych statystyk, wizualizację rozkładu zmiennych oraz wnioski płynące z analizy zależności między cechami demograficznymi a wzorcami zachowań cyfrowych. Analizowany zbiór danych składa się z `r nrow(dane)` obserwacji oraz `r ncol(dane)` zmiennych, obejmujących m.in. dane demograficzne, preferowane platformy, czas użytkowania oraz wskaźniki subiektywnego poczucia uzależnienia.
 
-Projekt pomoże odpowiedzieć na postawione przez nas pytania badawcze, takie jak: 
-- Czy istnieje statystycznie istotna zależność między poziomem uzależnienia od social mediów a zdrowiem psychicznym studentów,
-- Jak korzystanie z mediów społecznościowych wpływa na wyniki akademickie?
-- 
+Projekt pomoże odpowiedzieć na postawione przez nas pytania badawcze, takie jak: - Czy istnieje statystycznie istotna zależność między poziomem uzależnienia od social mediów a zdrowiem psychicznym studentów, - Jak korzystanie z mediów społecznościowych wpływa na wyniki akademickie? -
 
 ## Opis danych
 
 Analizowany zbiór danych składa się z 13 zmiennych dotyczących studentów z różnych krajów. Dane obejmują trzy kluczowe obszary:
 
-    Demografię (m.in. wiek, płeć, poziom edukacji).
+```         
+Demografię (m.in. wiek, płeć, poziom edukacji).
 
-    Aktywność w sieci (średni czas korzystania, najczęściej używana platforma).
+Aktywność w sieci (średni czas korzystania, najczęściej używana platforma).
 
-    Wskaźniki dobrostanu (poziom uzależnienia, ocena zdrowia psychicznego, jakość snu oraz wpływ na wyniki w nauce).
+Wskaźniki dobrostanu (poziom uzależnienia, ocena zdrowia psychicznego, jakość snu oraz wpływ na wyniki w nauce).
+```
 
 Zbiór jest kompletny i nie zawiera brakujących wartości.
 
@@ -242,10 +242,49 @@ Wykres przedstawia zależność pomiędzy przeciętną liczbą godzin używania 
 
 # Statystyki opisowe
 
-## Tendencja centralna dla zmiennej Addicted Score
+## Statystyki opisowe dla zmiennej Avg_Daily_Usage_Hours w podziale na 5 najczęściej używanych platform
+
+Ze względu na nierówną liczebność obserwacji w poszczególnych kategoriach zmiennej Most Used Platform, analizę ograniczono do pięciu najczęściej deklarowanych platform społecznościowych.
+
+```{r}
+top5_platform <- dane %>%
+  count(Most_Used_Platform, sort = TRUE) %>%
+  slice_head(n = 5) %>%
+  pull(Most_Used_Platform)
+
+Avg_Daily_Usage_Hours <- dane %>%
+  filter(Most_Used_Platform %in% top5_platform) %>%
+  group_by(Most_Used_Platform) %>%
+  summarise(
+    N = n(),
+    Min = min(Avg_Daily_Usage_Hours),
+    Q1 = quantile(Avg_Daily_Usage_Hours, 0.25),
+    Mediana = median(Avg_Daily_Usage_Hours),
+    Średnia = mean(Avg_Daily_Usage_Hours),
+    Q3 = quantile(Avg_Daily_Usage_Hours, 0.75),
+    Max = max(Avg_Daily_Usage_Hours),
+    SD = sd(Avg_Daily_Usage_Hours),
+    IQR = IQR(Avg_Daily_Usage_Hours)
+  )
+    
+kable(
+  Avg_Daily_Usage_Hours,
+  digits = 2,
+  caption = "Statystyki opisowe Avg_Daily_Usage_Hours dla 5 najczęściej używanych platform"
+) %>%
+  kable_paper(full_width = FALSE)
+```
+
+Osoby, które wskazały WhatsApp jako najczęściej używaną aplikację, spędzają przeciętnie najwięcej czasu ogółem w mediach społecznościowych w ciągu dnia. Wysoki łączny czas korzystania obserwuje się również wśród użytkowników TikToka, natomiast osoby deklarujące Facebook, Instagram lub Twitter jako najczęściej używaną platformę spędzają w mediach społecznościowych średnio mniej czasu. Największe zróżnicowanie dziennego czasu korzystania występuje wśród użytkowników Instagrama, a najmniejsze w grupie użytkowników WhatsAppa. 
 
 ```{r kable_report, echo=FALSE}
-mostusedplatform_addictedscore <- split(dane$Addicted_Score, dane$Most_Used_Platform)
+top5_platform <- dane %>%
+  count(Most_Used_Platform, sort = TRUE) %>%
+  slice_head(n = 5) %>%
+  pull(Most_Used_Platform)
+
+dane_top5 <- dane %>% filter(Most_Used_Platform %in% top5_platform)
+mostusedplatform_addictedscore <- split(dane_top5$Addicted_Score, dane_top5$Most_Used_Platform)
 
 inline_plot <- data.frame( 
   platform = names(mostusedplatform_addictedscore),
@@ -255,13 +294,14 @@ inline_plot <- data.frame(
 )
 
 inline_plot %>%
-  kbl(booktabs = TRUE) %>%
+  kbl(booktabs = TRUE, caption = "Tabela 4.2. Tabela rozkładu poziomu uzależnienia w podziale na TOP 5 najczęściej używanych platform") %>%
   kable_paper(full_width = FALSE) %>%
   column_spec(2, image = spec_boxplot(mostusedplatform_addictedscore)) %>%
   column_spec(3, image = spec_hist(mostusedplatform_addictedscore)) %>%
-  column_spec(4, image = spec_plot(mostusedplatform_addictedscore, type = "p"))
+  column_spec(4, image = spec_plot(mostusedplatform_addictedscore, type = "p",))
 ```
 
+## Statystyki opisowe dla zmiennej Addicted Score w podziale na płeć
 ```{r}
 raport <- list("Addicted Score" = 
                  list("Min"= ~ min(Addicted_Score), 
@@ -290,11 +330,23 @@ tabela_gender <- dane %>%
 
 kable(tabela_gender,
       digits = 2,
-      caption = "Tabela 4.2. Statystyki opisowe Addicted_Score w podziale na płeć") %>%
+      caption = "Tabela 4.3. Statystyki opisowe Addicted_Score w podziale na płeć") %>%
   kable_paper("striped", full_width = FALSE)
 ```
 
-library(ggstatsplot)
+Średnie i mediany wyników uzależnienia są podobne dla obu płci, przy czym kobiety mają nieco wyższą średnią i większą zmienność. Różnice między mężczyznami a kobietami są niewielkie i nie wskazują na znaczącą przewagę jednej grupy pod względem poziomu uzależnienia.
+
+## Macierz korelacji między poziomem uzależnienienia od social mediów, zdrowiem psychicznym, wiekiem i średnią liczbą używania social mediów
+```{r bivariate, echo=FALSE, warning=TRUE}
+num_cols <- dane[, c("Addicted_Score", "Mental_Health_Score", "Avg_Daily_Usage_Hours", "Age")]
+corr_matrix <- cor(num_cols, use="complete.obs")
+corrplot(corr_matrix, 
+         method = "color", 
+         type = "upper", 
+         addCoef.col = "black", 
+         tl.col = "black")
+```
+Zachodzi pełną zależność ujemną między poziomem uzależnieniem a zdrowiem psychicznym (-0.95), co oznacza, że wzrostowi uzależnienia, zawsze towarzyszy spadek zdrowia psychicznego. Kluczowym czynnikiem wpływającym na oba te parametry jest średni dzienny czas korzystania z mediów społecznościowych, który silnie koreluje z poziomem uzależnienia (0.83) oraz obniżeniem zdrowia psychicznej (-0.80). Jednocześnie wiek badanych nie ma istotnego znaczenia dla tych relacji, wykazując jedynie śladowe i nieznaczące statystycznie powiązania z resztą zmiennych.
 
 # Wnioskowanie statystyczne
 
@@ -307,6 +359,7 @@ ggbetweenstats(dane, Academic_Level , Addicted_Score)
 
 ```
 
+```{r}
 anova <- aov(Mental_Health_Score ~ Most_Used_Platform, data=dane)
 
 dane |>
@@ -314,6 +367,7 @@ aov(Mental_Health_Score ~ Most_Used_Platform, data=_) |>
 tidy() |>
 kbl() |>
 kable_classic(full_width = FALSE, html_font="Cambria")
+```
 
 ## Czy istnieje zależność między poziomem edukacji a najczęściej używaną aplikacją?
 
