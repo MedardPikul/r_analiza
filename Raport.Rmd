@@ -1,6 +1,6 @@
 ---
 title: "Wpływ Social Media na życia studentów"
-author: "Medard Pikul, Hanna Móżdżyńska, Zośka Stasiak, Marta Rutkowska" 
+author: "Medard Pikul, Hanna Móżdżyńska, Zosia Stasiak, Marta Rutkowska" 
 date: "`r Sys.Date()`"
 output:
   rmdformats::readthedown:
@@ -36,11 +36,26 @@ library(ggstatsplot)
 
 # Wprowadzenie
 
-Celem niniejszego raportu jest analiza wpływu social media na życia studentów. Raport zawiera przegląd kluczowych danych, ich wizualizacje oraz obszerne wnioski. Zbiór danych zawiera `r nrow(dane)` wierszy oraz `r ncol(dane)`kolumn.
+W dobie powszechnej cyfryzacji media społecznościowe stały się nieodłącznym elementem codzienności akademickiej, kształtując sposób, w jaki studenci komunikują się, spędzają wolny czas i budują relacje. Celem niniejszego raportu jest wielowymiarowa analiza wpływu korzystania z platform społecznościowych na dobrostan studentów. Szczególny nacisk położono na zbadanie korelacji między czasem ekranowym a zdrowiem psychicznym, jakością snu oraz wynikami w nauce.
+
+Raport zawiera przegląd kluczowych statystyk, wizualizację rozkładu zmiennych oraz wnioski płynące z analizy zależności między cechami demograficznymi a wzorcami zachowań cyfrowych. Analizowany zbiór danych składa się z `r nrow(dane)` obserwacji oraz `r ncol(dane)` zmiennych, obejmujących m.in. dane demograficzne, preferowane platformy, czas użytkowania oraz wskaźniki subiektywnego poczucia uzależnienia.
+
+Projekt pomoże odpowiedzieć na postawione przez nas pytania badawcze, takie jak: 
+- Czy istnieje statystycznie istotna zależność między poziomem uzależnienia od social mediów a zdrowiem psychicznym studentów,
+- Jak korzystanie z mediów społecznościowych wpływa na wyniki akademickie?
+- 
 
 ## Opis danych
 
-Dane zawierają następujące kolumny:
+Analizowany zbiór danych składa się z 13 zmiennych dotyczących studentów z różnych krajów. Dane obejmują trzy kluczowe obszary:
+
+    Demografię (m.in. wiek, płeć, poziom edukacji).
+
+    Aktywność w sieci (średni czas korzystania, najczęściej używana platforma).
+
+    Wskaźniki dobrostanu (poziom uzależnienia, ocena zdrowia psychicznego, jakość snu oraz wpływ na wyniki w nauce).
+
+Zbiór jest kompletny i nie zawiera brakujących wartości.
 
 # Porządkowanie danych
 
@@ -63,9 +78,9 @@ naniar::vis_miss(dane)
 -   czy wszystkie wartości liczbowe są większe od 0?
 -   czy mental health score i addicted score przyjmują wartości 1 - 10?
 -   płeć - kobieta lub mężczyzna?
--   academic level - high school, undergraduate, graduate?
--   relationship status - single, in relationship, complicated?
--   affects academic performance - yes/no?
+-   poziom wykształcenia - szkoła średnia, studia I stopnia lub studia II stopnia
+-   status związku - wolny, w związku, "to skomplikowane"
+-   czy wpływa na wyniki akademickie - tak lub nie?
 
 ```{r}
 reguly <- validator(
@@ -109,6 +124,8 @@ ggplot(dane, aes(x = Academic_Level, fill=Gender)) +
   theme_minimal()
 ```
 
+Analiza struktury demograficznej wskazuje na równomierny rozkład płci (blisko 50/50), natomiast w podziale na poziom edukacji przeważają osoby na studiach I i II stopnia, stanowiąc łącznie ponad 96% próby.
+
 ### Wiek badanych
 
 ```{r}
@@ -119,6 +136,8 @@ ggplot(dane, aes(x = Age)) +
        y = "Liczba studentów") +
   theme_minimal()
 ```
+
+Większość badanych to osoby w wieku od 19 do 23 lat, co wskazuje na silną koncentrację danych wokół typowego wieku studenckiego. Średnia wieku w próbie wynosi około 21 lat.
 
 ## Intensywność Używania Social Mediów
 
@@ -132,6 +151,8 @@ ggplot(dane, aes(x = Avg_Daily_Usage_Hours)) +
        y = "Liczba studentów") +
   theme_minimal()
 ```
+
+Większość studentów spędza w mediach społecznościowych od 4 do 6 godzin dziennie, przy czym średnia dla całej grupy wynosi blisko 5 godzin. Rozkład wskazuje, że znaczna część badanych deklaruje wysoką aktywność cyfrową, przekraczającą 4 godziny na dobę.
 
 ### Najczęściej używane platformy
 
