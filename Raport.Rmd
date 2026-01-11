@@ -297,5 +297,5 @@ kable_classic(full_width = FALSE, html_font="Cambria")
 ## Czy istnieje zależność między poziomem edukacji a najczęściej używaną aplikacją?
 
 ```{r}
-ggbarstats(dane, Academic_Level, Most_Used_Platform, bf.message = FALSE)
+ggpiestats(dane, Academic_Level, Most_Used_Platform, bf.message = FALSE)
 ```
