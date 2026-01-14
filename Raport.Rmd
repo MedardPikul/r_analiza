@@ -33,6 +33,7 @@ library(psych)
 library(broom)
 library(ggstatsplot)
 library(corrplot)
+library(ggstatsplot)
 ```
 
 # Wprowadzenie
@@ -228,18 +229,6 @@ geom_smooth(method = "lm", se = F) +
 
 Wykres przedstawia linię regresji liniowej obrazującą zależność pomiędzy poziomem uzależnienia od social mediów a zdrowiem psychicznym studentów. Wraz ze wzrostem poziomu uzależnienia obserwuje się spadek wyników zdrowia psychicznego.
 
-## Wpływ social mediów na relacje interpersonalne
-
-```{r}
-ggplot(dane, aes(x = Avg_Daily_Usage_Hours, y = Conflicts_Over_Social_Media)) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", col = "blue") +
-  labs(title = "Korelacja czasu używania social mediów z liczbą konfliktów") +
-  theme_light()
-```
-
-Wykres przedstawia zależność pomiędzy przeciętną liczbą godzin używania social mediów a liczbą konfliktów spowodanych social mediami wraz z przeiwdywaną linią trendu. Przy wzroście średniego dziennego użytkowania social mediów zauważa się również wzrost liczby konfliktów w tym temacie.
-
 # Statystyki opisowe
 
 ## Statystyki opisowe dla zmiennej Avg_Daily_Usage_Hours w podziale na 5 najczęściej używanych platform
@@ -374,3 +363,10 @@ kable_classic(full_width = FALSE, html_font="Cambria")
 ```{r}
 ggpiestats(dane, Academic_Level, Most_Used_Platform, bf.message = FALSE)
 ```
+
+## Czy istnieje zależność między średnim czasem używania social mediów a liczbą konfliktów?
+```{r}
+ggbetweenstats(data = dane, x = Conflicts_Over_Social_Media, y = 	Avg_Daily_Usage_Hours, pairwise.display = "none")
+```
+
+Wykres przedstawia zależność pomiędzy przeciętną liczbą godzin używania social mediów a liczbą konfliktów spowodanych social mediami. Wartość p poniżej poziomu 0,001,czyli jest ekstremalnie mała. Oznacza to, że istnieją statystycznie istotne różnice między grupami. Poziom konfliktów ma wyraźny związek z czasem spędzanym w sieci. Współczynnik omega-kwadrat na poziomie 0,99 sugeruje, że prawie cała zmienność czasu użytkowania, czyli około 99% daje się wyjaśnić poziomem konfliktów. Należy zatem założyć bardzo silną korelację między tymi zmiennymi.Ponadto,wraz ze wzrostem liczby konfliktów, systematycznie rośnie średni czas użytkowania SM. Średnie rosną od ok. 2,11 dla pierwszej grupy przez 3,11, 4,02, 4,98, 6,25, aż do 6,99 godziny dziennie w ostatniej grupie.Widać wyraźny, monotoniczny trend wzrostowy: im więcej konfliktów, tym więcej czasu spędzanego w mediach społecznościowych. Wynik może sugerować, że nadmierne korzystanie z SM jest głównym źródłem napięć (np. rodzinnych lub partnerskich).
