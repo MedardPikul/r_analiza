@@ -216,6 +216,7 @@ Zdecydowana większość badanych zadeklarowała, że korzystanie z social medi�
 ## Social media a zdrowie psychiczne
 
 ```{r}
+#mozaikowy, na plakacie z ggplota
 ggplot(dane, aes(x= Avg_Daily_Usage_Hours, y = Mental_Health_Score))+
 geom_smooth(method = "lm", se = F) +
  labs(
@@ -286,7 +287,7 @@ inline_plot <- data.frame(
 
 inline_plot %>%
   kbl(booktabs = TRUE, caption = "Tabela 4.2. Tabela rozkładu poziomu uzależnienia w podziale na TOP 5 najczęściej używanych platform") %>%
-  kable_paper(full_width = FALSE) %>%
+  kable_paper(full_width = TRUE) %>%
   column_spec(2, image = spec_boxplot(mostusedplatform_addictedscore)) %>%
   column_spec(3, image = spec_hist(mostusedplatform_addictedscore)) %>%
   column_spec(4, image = spec_plot(mostusedplatform_addictedscore, type = "p",))
@@ -342,11 +343,12 @@ Zachodzi pełną zależność ujemną między poziomem uzależnieniem a zdrowiem
 # Wnioskowanie statystyczne
 
 ```{r}
-ggbetweenstats(dane, Gender, Addicted_Score)
+ggbetweenstats(dane, Gender, Addicted_Score,type=("np"))
+#
 ```
 
 ```{r}
-ggbetweenstats(dane, Academic_Level , Addicted_Score)
+ggbetweenstats(dane, Academic_Level , Addicted_Score,type = "np")
 
 ```
 
@@ -373,6 +375,7 @@ ggbetweenstats(data = dane, x = Conflicts_Over_Social_Media, y = 	Avg_Daily_Usag
 
 Wykres przedstawia zależność pomiędzy przeciętną liczbą godzin używania social mediów a liczbą konfliktów spowodanych social mediami. Wartość p poniżej poziomu 0,001,czyli jest ekstremalnie mała. Oznacza to, że istnieją statystycznie istotne różnice między grupami. Poziom konfliktów ma wyraźny związek z czasem spędzanym w sieci. Współczynnik omega-kwadrat na poziomie 0,99 sugeruje, że prawie cała zmienność czasu użytkowania, czyli około 99% daje się wyjaśnić poziomem konfliktów. Należy zatem założyć bardzo silną korelację między tymi zmiennymi.Ponadto,wraz ze wzrostem liczby konfliktów, systematycznie rośnie średni czas użytkowania SM. Średnie rosną od ok. 2,11 dla pierwszej grupy przez 3,11, 4,02, 4,98, 6,25, aż do 6,99 godziny dziennie w ostatniej grupie.Widać wyraźny, monotoniczny trend wzrostowy: im więcej konfliktów, tym więcej czasu spędzanego w mediach społecznościowych. Wynik może sugerować, że nadmierne korzystanie z SM jest głównym źródłem napięć (np. rodzinnych lub partnerskich).
 ```{r}
+#zmienic na zmienna binarna (czy wplywa na wyniki akademickie)
 dane %>%
   anova_test(Addicted_Score ~ Conflicts_Over_Social_Media*Avg_Daily_Usage_Hours)%>%
   kbl()%>%
