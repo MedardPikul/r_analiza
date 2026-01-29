@@ -26,7 +26,6 @@ library(errorlocate)
 library(ggplot2)
 library(plotly)
 library(gtsummary)
-library(summarytools)
 library(knitr)
 library(kableExtra)
 library(psych)
@@ -213,24 +212,22 @@ ggplot(dane, aes(x = Affects_Academic_Performance)) +
 
 Zdecydowana większość badanych zadeklarowała, że korzystanie z social mediów wpływa na ich osiągnięcia akademickie, podczas gdy mniejsza część respondentów nie dostrzega takiego wpływu. Uzyskane wyniki sugerują, że studenci w dużym stopniu są świadomi oddziaływania mediów społecznościowych na wyniki w nauce.
 
-## Social media a zdrowie psychiczne
+## Zdrowie psychiczne
 
 ```{r}
 #mozaikowy, na plakacie z ggplota
-ggplot(dane, aes(x= Avg_Daily_Usage_Hours, y = Mental_Health_Score))+
-geom_smooth(method = "lm", se = F) +
- labs(
-    title = "Zależność między uzależnieniem od social mediów a zdrowiem psychicznym",
-    x = "Poziom uzależnienia",
-    y = "Poziom zdrowia psychicznego"
+ggplot(dane, aes(x = factor(Mental_Health_Score, levels = 1:10))) +
+  geom_bar(fill = "#9f2042", color = "#6c0d27")+
+  labs(
+    title = "Ocena zdrowia psychicznego studentów",
+    x = "Poziom zdrowia psychicznego",
+    y = "Liczba studentów"
   ) +
-  theme_minimal()+
-  theme(
-    plot.title = element_text(hjust = 0.5)
-  )
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
-Wykres przedstawia linię regresji liniowej obrazującą zależność pomiędzy poziomem uzależnienia od social mediów a zdrowiem psychicznym studentów. Wraz ze wzrostem poziomu uzależnienia obserwuje się spadek wyników zdrowia psychicznego.
+Rozkład ocen zdrowia psychicznego studentów wskazuje, że odpowiedzi koncentrują się w środkowym zakresie skali. Najczęściej deklarowane wartości mieszczą się pomiędzy 5 a 7 punktów, przy czym najwyższą liczebność odnotowano dla oceny 6. W badanej próbie nie odnotowano odpowiedzi dla najniższych wartości skali (1–3) ani dla wartości maksymalnej (10), co sugeruje brak skrajnie negatywnych oraz skrajnie pozytywnych ocen zdrowia psychicznego wśród respondentów. Uzyskany rozkład wskazuje na umiarkowany poziom subiektywnego dobrostanu psychicznego w analizowanej grupie studentów.
 
 # Statystyki opisowe
 
@@ -328,7 +325,7 @@ kable(tabela_gender,
 
 Średnie i mediany wyników uzależnienia są podobne dla obu płci, przy czym kobiety mają nieco wyższą średnią i większą zmienność. Różnice między mężczyznami a kobietami są niewielkie i nie wskazują na znaczącą przewagę jednej grupy pod względem poziomu uzależnienia.
 
-## Macierz korelacji między poziomem uzależnienienia od social mediów, zdrowiem psychicznym, wiekiem i średnią liczbą używania social mediów
+## Macierz korelacji między poziomem uzależnienienia od social mediów, zdrowiem psychicznym, wiekiem i średnim czasem używania social mediów
 ```{r bivariate, echo=FALSE, warning=TRUE}
 num_cols <- dane[, c("Addicted_Score", "Mental_Health_Score", "Avg_Daily_Usage_Hours", "Age")]
 corr_matrix <- cor(num_cols, use="complete.obs")
