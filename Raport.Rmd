@@ -1,6 +1,6 @@
 ---
 title: "Wpływ Social Media na życia studentów"
-author: "Medard Pikul, Hanna Móżdżyńska, Zosia Stasiak, Marta Rutkowska" 
+author: "Medard Pikul, Hanna Móżdżyńska, Zofia Stasiak, Marta Rutkowska" 
 date: "`r Sys.Date()`"
 output:
   rmdformats::readthedown:
@@ -72,13 +72,13 @@ naniar::vis_miss(dane)
 ## Walidacja danych
 
 -   czy wiek przyjmuje wartości od 16 - 25?
--   czy godziny przyjmują wartości 0 - 24?
+-   czy średni czas użycia przyjmuje wartości 0 - 24?
 -   czy wszystkie wartości liczbowe są większe od 0?
 -   czy mental health score i addicted score przyjmują wartości 1 - 10?
 -   płeć - kobieta lub mężczyzna?
 -   poziom wykształcenia - szkoła średnia, studia I stopnia lub studia II stopnia
 -   status związku - wolny, w związku, "to skomplikowane"
--   czy wpływa na wyniki akademickie - tak lub nie.
+-   czy wpływa na wyniki akademickie - tak lub nie?
 
 ```{r}
 reguly <- validator(
@@ -145,7 +145,7 @@ Większość badanych to osoby w wieku od 19 do 23 lat, co wskazuje na silną ko
 
 ## Intensywność Używania Social Mediów
 
-### Średni czas użycia
+### Średni czas używania Social Mediów
 
 ```{r}
 ggplot(dane, aes(x = Avg_Daily_Usage_Hours)) +
@@ -174,7 +174,9 @@ mutate(top_5 = fct_lump_n(Most_Used_Platform, n = 4, other_level = "Inne")) %>%
 
 Większość badanych studentów najczęściej korzysta z Instagrama, który z wynikiem blisko 250 wskazań dominuje nad pozostałymi platformami. Znaczną popularnością cieszy się również TikTok, a podium zamyka Facebook, który osiągnął podobny wynik do sumy zebranej przez resztę aplikacji nie pokazanych na wykresie (m.in. Snapchat, Twitter czy LinkedIn). 
 
-## Wpływ social mediów na wyniki akademickie
+## Charakterystyka wpływu mediów społecznościowych
+
+### Poziom uzależnienia od Social Mediów
 
 ```{r}
 
@@ -194,6 +196,8 @@ plotly:: ggplotly(wykres)
 ```
 
 Największa liczba badanych koncentruje się na umiarkowanych i wyższych poziomach uzależnienia, co wskazuje na powszechność intensywnego korzystania z mediów społecznościowych w badanej grupie.
+
+### Wpływ Social Mediów na wyniki akademickie
 
 ```{r}
 ggplot(dane, aes(x = Affects_Academic_Performance)) +
@@ -216,7 +220,7 @@ ggplot(dane, aes(x = Affects_Academic_Performance)) +
 
 Zdecydowana większość badanych zadeklarowała, że korzystanie z social mediów wpływa na ich osiągnięcia akademickie, podczas gdy mniejsza część respondentów nie dostrzega takiego wpływu. Uzyskane wyniki sugerują, że studenci w dużym stopniu są świadomi oddziaływania mediów społecznościowych na wyniki w nauce.
 
-## Zdrowie psychiczne
+## Zdrowie psychiczne studentów
 
 ```{r}
 #mozaikowy, na plakacie z ggplota
@@ -235,7 +239,7 @@ Rozkład ocen zdrowia psychicznego studentów wskazuje, że odpowiedzi koncentru
 
 # Statystyki opisowe
 
-## Statystyki opisowe dla zmiennej Avg_Daily_Usage_Hours w podziale na 5 najczęściej używanych platform
+## Statystyki opisowe średniego dziennego czasu korzystania z mediów społecznościowych w podziale na 5 najczęściej używanych platform
 
 Ze względu na nierówną liczebność obserwacji w poszczególnych kategoriach zmiennej Most Used Platform, analizę ograniczono do pięciu najczęściej deklarowanych platform społecznościowych.
 
@@ -294,7 +298,7 @@ inline_plot %>%
   column_spec(4, image = spec_plot(mostusedplatform_addictedscore, type = "p",))
 ```
 
-## Statystyki opisowe dla zmiennej Addicted Score w podziale na płeć
+## Statystyki opisowe poziomu uzależnienia od mediów społecznościowych
 ```{r}
 raport <- list("Addicted Score" = 
                  list("Min"= ~ min(Addicted_Score), 
@@ -347,11 +351,13 @@ Zachodzi prawie pełna zależność ujemną między poziomem uzależnieniem a zd
 ggbetweenstats(dane, Gender, Addicted_Score,type=("np"))
 #
 ```
+Nie stwierdzono istotnych statystycznie różnic w poziomie uzależnienia od mediów społecznościowych pomiędzy kobietami i mężczyznami (p = 0,11). Mediany wyników w obu grupach są takie same i wynoszą 7, a rozkłady wartości w dużym stopniu się pokrywają. Wielkość efektu jest bardzo mała, co wskazuje, że płeć nie stanowi istotnego czynnika różnicującego poziom uzależnienia w badanej próbie.
 
 ```{r}
 ggbetweenstats(dane, Academic_Level , Addicted_Score,type = "np")
 
 ```
+Analiza wykazała istotne statystycznie różnice w poziomie uzależnienia od mediów społecznościowych pomiędzy grupami o różnym poziomie edukacji. Najwyższy poziom uzależnienia zaobserwowano wśród osób ze szkołą średnią (mediana = 8), natomiast w grupach studentów studiów I i II stopnia mediany były niższe i wynosiły po 7. Różnice te dotyczyły przede wszystkim porównań między osobami ze szkołą średnią a pozostałymi grupami, natomiast między studentami studiów I i II stopnia poziomy uzależnienia były bardzo zbliżone. Oznacza to, że poziom uzależnienia od mediów społecznościowych różni się w zależności od poziomu edukacji, jednak siła tej zależności jest niewielka.
 
 ```{r}
 anova <- aov(Mental_Health_Score ~ Most_Used_Platform, data=dane)
@@ -363,11 +369,14 @@ kbl() |>
 kable_classic(full_width = FALSE, html_font="Cambria")
 ```
 
+Wyniki analizy  wskazują na istotne statystycznie różnice w ocenie zdrowia psychicznego studentów w zależności od najczęściej używanej platformy społecznościowej. Oznacza to, że średni poziom zdrowia psychicznego nie jest taki sam wśród użytkowników różnych aplikacji.
+
 ## Czy istnieje zależność między poziomem edukacji a najczęściej używaną aplikacją?
 
 ```{r}
 ggpiestats(dane, Academic_Level, Most_Used_Platform, bf.message = FALSE)
 ```
+Analiza wykazała istotną statystycznie zależność między poziomem edukacji a najczęściej używaną platformą społecznościową. Oznacza to, że wybór najczęściej używanej aplikacji różni się w zależności od poziomu edukacji badanych. Umiarkowana wartość współczynnika V Craméra (0,37) wskazuje, że zależność ta jest wyraźna, choć nie ma charakteru silnego. Analiza struktury użytkowników poszczególnych platform wskazuje, że LinkedIn i VKontakte są zdominowane przez osoby na studiach II stopnia, natomiast LINE i KakaoTalk przez studentów studiów I stopnia.
 
 ## Czy istnieje zależność między średnim czasem używania social mediów a liczbą konfliktów?
 ```{r}
@@ -392,3 +401,10 @@ dane %>%
 
 ```
 Wyniki przeprowadzonej analizy ANOVA wskazują na złożone relacje między higieną cyfrową a sukcesem edukacyjnym. Najważniejszym wnioskiem jest dominująca rola zmiennej Addicted_Score, która jako jedyny główny czynnik wykazuje bardzo silny, bezpośredni wpływ na wyniki akademickie (ges=0.613). Co ciekawe, sama liczba godzin snu okazała się nieistotna statystycznie (p=0.78), co sugeruje, że długość wypoczynku nie determinuje ocen w izolacji od pozostałych zachowań. Jednakże klucz do pełnego zrozumienia zjawiska leży w istotnej interakcji trójstopniowej (p<.001,ges=0.148). Oznacza ona, że wpływ snu na wyniki akademickie jest ściśle uzależniony od tego, jak intensywnie badany korzysta z telefonu oraz jaki jest jego poziom uzależnienia. W praktyce oznacza to, że negatywne skutki niedoboru snu mogą być drastycznie potęgowane przez nadmierne używanie telefonu i wysoki wskaźnik uzależnienia, podczas gdy u osób o niskim profilu uzależnienia ten sam brak snu może nie mieć tak destrukcyjnego wpływu na oceny. Cały model dowodzi, że w badaniu wyników nauczania nie można rozpatrywać tych czynników osobno, gdyż tworzą one wzajemnie napędzający się mechanizm.
+
+# Podsumowanie 
+Przeprowadzona analiza wykazała, że korzystanie z mediów społecznościowych stanowi istotny element codziennego funkcjonowania studentów i wiąże się z ich dobrostanem psychicznym oraz wynikami akademickimi. Najsilniejszym czynnikiem różnicującym badanych okazał się poziom uzależnienia od mediów społecznościowych, który był ściśle powiązany z obniżeniem zdrowia psychicznego oraz gorszym funkcjonowaniem akademickim.
+
+Nie stwierdzono istotnych różnic w poziomie uzależnienia pomiędzy kobietami i mężczyznami, natomiast wykazano zróżnicowanie tego poziomu w zależności od etapu edukacji, przy czym zależność ta miała niewielką siłę. Wykazano również istotną i umiarkowaną zależność między poziomem edukacji a strukturą użytkowników poszczególnych platform społecznościowych.
+
+Ponadto zaobserwowano bardzo silny związek między średnim czasem korzystania z mediów społecznościowych a liczbą konfliktów na tle ich użytkowania, co wskazuje na potencjalne konsekwencje nadmiernej aktywności cyfrowej. Wyniki analizy wieloczynnikowej podkreślają, że czynniki takie jak sen, czas korzystania z telefonu oraz poziom uzależnienia tworzą wzajemnie powiązany mechanizm wpływający na osiągnięcia akademickie studentów.
