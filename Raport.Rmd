@@ -43,19 +43,15 @@ W dobie powszechnej cyfryzacji media społecznościowe stały się nieodłączny
 
 Raport zawiera przegląd kluczowych statystyk, wizualizację rozkładu zmiennych oraz wnioski płynące z analizy zależności między cechami demograficznymi a wzorcami zachowań cyfrowych. Analizowany zbiór danych składa się z `r nrow(dane)` obserwacji oraz `r ncol(dane)` zmiennych, obejmujących m.in. dane demograficzne, preferowane platformy, czas użytkowania oraz wskaźniki subiektywnego poczucia uzależnienia.
 
-Projekt pomoże odpowiedzieć na postawione przez nas pytania badawcze, takie jak: - Czy istnieje statystycznie istotna zależność między poziomem uzależnienia od social mediów a zdrowiem psychicznym studentów, - Jak korzystanie z mediów społecznościowych wpływa na wyniki akademickie? -
+Projekt pomoże poznać czy istnieje statystycznie istotny wpływ ilości snu, średniego czasu spędzanego przed telefonem oraz oceny uzależnienia na wyniki akademickie. Ponadto, dowiemy się czy istnieje zależność między poziomem edukacji a najczęściej używaną aplikacją oraz czy istnieje zależność między średnim czasem używania social mediów a liczbą konfliktów na tle korzystania z mediów społecznościowych.
 
 ## Opis danych
 
 Analizowany zbiór danych składa się z 13 zmiennych dotyczących studentów z różnych krajów. Dane obejmują trzy kluczowe obszary:
 
-```         
-Demografię (m.in. wiek, płeć, poziom edukacji).
-
-Aktywność w sieci (średni czas korzystania, najczęściej używana platforma).
-
-Wskaźniki dobrostanu (poziom uzależnienia, ocena zdrowia psychicznego, jakość snu oraz wpływ na wyniki w nauce).
-```
+- Demografię (m.in. wiek, płeć, poziom edukacji).
+- Aktywność w sieci (średni czas korzystania, najczęściej używana platforma).
+- Wskaźniki dobrostanu (poziom uzależnienia, ocena zdrowia psychicznego, jakość snu oraz wpływ na wyniki w nauce).
 
 Zbiór jest kompletny i nie zawiera brakujących wartości.
 
@@ -82,27 +78,33 @@ naniar::vis_miss(dane)
 -   płeć - kobieta lub mężczyzna?
 -   poziom wykształcenia - szkoła średnia, studia I stopnia lub studia II stopnia
 -   status związku - wolny, w związku, "to skomplikowane"
--   czy wpływa na wyniki akademickie - tak lub nie?
+-   czy wpływa na wyniki akademickie - tak lub nie.
 
 ```{r}
 reguly <- validator(
-Age >= 16 & Age <= 25,
-Gender %in% c("Female", "Male"),
-Academic_Level  %in% c("High School", "Undergraduate", "Graduate"),
-Avg_Daily_Usage_Hours > 0 & Avg_Daily_Usage_Hours < 24,
-Affects_Academic_Performance %in% c("Yes", "No"),
-Sleep_Hours_Per_Night >= 0 & Sleep_Hours_Per_Night <= 24,
-Mental_Health_Score >= 1 & Mental_Health_Score<=10,
-Relationship_Status %in% c("In Relationship", "Single", "Complicated"),
-Addicted_Score >= 1 & Addicted_Score <= 10
+Wiek = Age >= 16 & Age <= 25,
+Płeć = Gender %in% c("Female", "Male"),
+Poziom_Edukacji = Academic_Level  %in% c("High School", "Undergraduate", "Graduate"),
+Średni_Czas_Użycia = Avg_Daily_Usage_Hours > 0 & Avg_Daily_Usage_Hours < 24,
+Wpływ_na_Nauke = Affects_Academic_Performance %in% c("Yes", "No"),
+Sen = Sleep_Hours_Per_Night >= 0 & Sleep_Hours_Per_Night <= 24,
+Zdrowie_psychiczne = Mental_Health_Score >= 1 & Mental_Health_Score<=10,
+Status_związkowy = Relationship_Status %in% c("In Relationship", "Single", "Complicated"),
+Wynik_uzależnienia = Addicted_Score >= 1 & Addicted_Score <= 10
 )
 ```
 
 ```{r}
 cf <- confront(dane, reguly, key="Student_ID")
 
-barplot(cf)
+par(mar = c(5, 10, 4, 2)) 
 
+plot(cf,
+      title = "Weryfikacja spójności i kompletności danych",
+     xlab = "Liczba rekordów",
+     las = 1,                              # Etykiety poziomo
+     cex.axis = 0.8,                       # Czcionka osi
+)
 ```
 
 # Wizualizacja danych
@@ -169,6 +171,8 @@ mutate(top_5 = fct_lump_n(Most_Used_Platform, n = 4, other_level = "Inne")) %>%
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+Większość badanych studentów najczęściej korzysta z Instagrama, który z wynikiem blisko 250 wskazań dominuje nad pozostałymi platformami. Znaczną popularnością cieszy się również TikTok, a podium zamyka Facebook, który osiągnął podobny wynik do sumy zebranej przez resztę aplikacji nie pokazanych na wykresie (m.in. Snapchat, Twitter czy LinkedIn). 
 
 ## Wpływ social mediów na wyniki akademickie
 
@@ -335,7 +339,7 @@ corrplot(corr_matrix,
          addCoef.col = "black", 
          tl.col = "black")
 ```
-Zachodzi pełną zależność ujemną między poziomem uzależnieniem a zdrowiem psychicznym (-0.95), co oznacza, że wzrostowi uzależnienia, zawsze towarzyszy spadek zdrowia psychicznego. Kluczowym czynnikiem wpływającym na oba te parametry jest średni dzienny czas korzystania z mediów społecznościowych, który silnie koreluje z poziomem uzależnienia (0.83) oraz obniżeniem zdrowia psychicznej (-0.80). Jednocześnie wiek badanych nie ma istotnego znaczenia dla tych relacji, wykazując jedynie śladowe i nieznaczące statystycznie powiązania z resztą zmiennych.
+Zachodzi prawie pełna zależność ujemną między poziomem uzależnieniem a zdrowiem psychicznym (-0.95), co oznacza, że wzrostowi uzależnienia, zawsze towarzyszy spadek zdrowia psychicznego. Kluczowym czynnikiem wpływającym na oba te parametry jest średni dzienny czas korzystania z mediów społecznościowych, który silnie koreluje z poziomem uzależnienia (0.83) oraz obniżeniem zdrowia psychicznej (-0.80). Jednocześnie wiek badanych nie ma istotnego znaczenia dla tych relacji, wykazując jedynie śladowe i nieznaczące statystycznie powiązania z resztą zmiennych.
 
 # Wnioskowanie statystyczne
 
@@ -371,26 +375,20 @@ ggbetweenstats(data = dane, x = Conflicts_Over_Social_Media, y = 	Avg_Daily_Usag
 ```
 
 Wykres przedstawia zależność pomiędzy przeciętną liczbą godzin używania social mediów a liczbą konfliktów spowodanych social mediami. Wartość p poniżej poziomu 0,001,czyli jest ekstremalnie mała. Oznacza to, że istnieją statystycznie istotne różnice między grupami. Poziom konfliktów ma wyraźny związek z czasem spędzanym w sieci. Współczynnik omega-kwadrat na poziomie 0,99 sugeruje, że prawie cała zmienność czasu użytkowania, czyli około 99% daje się wyjaśnić poziomem konfliktów. Należy zatem założyć bardzo silną korelację między tymi zmiennymi.Ponadto,wraz ze wzrostem liczby konfliktów, systematycznie rośnie średni czas użytkowania SM. Średnie rosną od ok. 2,11 dla pierwszej grupy przez 3,11, 4,02, 4,98, 6,25, aż do 6,99 godziny dziennie w ostatniej grupie.Widać wyraźny, monotoniczny trend wzrostowy: im więcej konfliktów, tym więcej czasu spędzanego w mediach społecznościowych. Wynik może sugerować, że nadmierne korzystanie z SM jest głównym źródłem napięć (np. rodzinnych lub partnerskich).
+
+## Analiza ANOVA wieloczynnikowa - wpływ snu, czasu korzystania z telefonu i poziomu uzależnienia na wyniki akademickie
 ```{r}
-#zmienic na zmienna binarna (czy wplywa na wyniki akademickie)
 dane %>%
-  anova_test(Addicted_Score ~ Conflicts_Over_Social_Media*Avg_Daily_Usage_Hours)%>%
-  kbl()%>%
-  kable_styling(bootstrap_options = c("striped","hover"))
-#tutaj zmienic te dane jesli chcemy to zawrzeć, ja dalem raczej losowe
-#wykres interakcji conflicts vs average hours
-interaction.plot(
-  x.factor=dane$Conflicts_Over_Social_Media,
-  trace.factor = dane$Avg_Daily_Usage_Hours,
-  response = dane$Addicted_Score,
-  fun=mean,
-  type = "b",
-  col=c("red","blue"),
-  pch=c(16,18),
-  xlab="liczba konfliktów",
-  ylab="średni addicted score",
-  legend=TRUE,
-)
+  mutate(
+    # Konwersja zmiennej wynikowej
+    Affects_Academic_Performance = ifelse(Affects_Academic_Performance == "Yes", 1, 0),
+    # Upewnienie się, że predyktory są liczbami
+    Sleep_Hours_Per_Night = as.numeric(Sleep_Hours_Per_Night),
+    Avg_Daily_Usage_Hours = as.numeric(Avg_Daily_Usage_Hours)
+  ) %>%
+  anova_test(Affects_Academic_Performance ~ Sleep_Hours_Per_Night * Avg_Daily_Usage_Hours * Addicted_Score) %>%
+  kbl(digits = 100) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = F)
 
 ```
-
+Wyniki przeprowadzonej analizy ANOVA wskazują na złożone relacje między higieną cyfrową a sukcesem edukacyjnym. Najważniejszym wnioskiem jest dominująca rola zmiennej Addicted_Score, która jako jedyny główny czynnik wykazuje bardzo silny, bezpośredni wpływ na wyniki akademickie (ges=0.613). Co ciekawe, sama liczba godzin snu okazała się nieistotna statystycznie (p=0.78), co sugeruje, że długość wypoczynku nie determinuje ocen w izolacji od pozostałych zachowań. Jednakże klucz do pełnego zrozumienia zjawiska leży w istotnej interakcji trójstopniowej (p<.001,ges=0.148). Oznacza ona, że wpływ snu na wyniki akademickie jest ściśle uzależniony od tego, jak intensywnie badany korzysta z telefonu oraz jaki jest jego poziom uzależnienia. W praktyce oznacza to, że negatywne skutki niedoboru snu mogą być drastycznie potęgowane przez nadmierne używanie telefonu i wysoki wskaźnik uzależnienia, podczas gdy u osób o niskim profilu uzależnienia ten sam brak snu może nie mieć tak destrukcyjnego wpływu na oceny. Cały model dowodzi, że w badaniu wyników nauczania nie można rozpatrywać tych czynników osobno, gdyż tworzą one wzajemnie napędzający się mechanizm.
