@@ -349,7 +349,7 @@ Zachodzi prawie pełna zależność ujemną między poziomem uzależnieniem a zd
 
 ```{r}
 ggbetweenstats(dane, Gender, Addicted_Score,type=("np"))
-#
+
 ```
 Nie stwierdzono istotnych statystycznie różnic w poziomie uzależnienia od mediów społecznościowych pomiędzy kobietami i mężczyznami (p = 0,11). Mediany wyników w obu grupach są takie same i wynoszą 7, a rozkłady wartości w dużym stopniu się pokrywają. Wielkość efektu jest bardzo mała, co wskazuje, że płeć nie stanowi istotnego czynnika różnicującego poziom uzależnienia w badanej próbie.
 
